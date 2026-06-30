@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SentinelAI — Suspicious Activity Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">SentinelAI</span>
+      </div>
+      <span class="header-badge">Video Anomaly Detection</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Detect Threats. <span class="accent">Automatically.</span></h1>
+      <p class="hero-sub">Upload surveillance footage and get an AI-powered red/yellow/green heatmap overlay highlighting suspicious activity in real time.</p>
+    </div>
+  </section>
+
+  <!-- Upload Section -->
+  <main class="main-container">
+    <section class="upload-section" id="uploadSection">
+      <div class="card">
+        <h2 class="card-title">Upload Video</h2>
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-icon">📹</div>
+          <p class="drop-text">Drag & drop your video here</p>
+          <p class="drop-sub">MP4, AVI, MOV, MKV — max 200 MB</p>
+          <button class="btn-primary" onclick="document.getElementById('fileInput').click()">Browse File</button>
+          <input type="file" id="fileInput" accept=".mp4,.avi,.mov,.mkv" style="display:none"/>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-wrapper" id="progressWrapper" style="display:none">
+          <div class="progress-label" id="progressLabel">Uploading...</div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+          </div>
+          <div class="progress-status" id="progressStatus">0%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection" style="display:none">
+
+      <!-- Threat Level Card -->
+      <div class="card threat-card" id="threatCard">
+        <div class="threat-label">Overall Threat Level</div>
+        <div class="threat-level" id="threatLevel">—</div>
+        <div class="threat-stats" id="threatStats"></div>
+      </div>
+
+      <!-- Video Split View -->
+      <div class="card">
+        <h2 class="card-title">Analysis Result</h2>
+        <div class="video-grid">
+          <div class="video-wrapper">
+            <div class="video-label">Original</div>
+            <video id="originalVideo" controls></video>
+          </div>
+          <div class="video-wrapper">
+            <div class="video-label">Heatmap Overlay</div>
+            <video id="heatmapVideo" controls></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anomaly Timeline -->
+      <div class="card">
+        <h2 class="card-title">Anomaly Timeline</h2>
+        <div class="timeline-bar" id="timelineBar"></div>
+        <div class="timeline-legend">
+          <span class="legend-item"><span class="dot green"></span>Normal</span>
+          <span class="legend-item"><span class="dot yellow"></span>Suspicious</span>
+          <span class="legend-item"><span class="dot red"></span>Anomaly</span>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div class="metrics-grid" id="metricsGrid"></div>
+
+      <!-- New Upload Button -->
+      <div style="text-align:center; margin-top: 2rem;">
+        <button class="btn-primary" onclick="resetUI()">Analyse Another Video</button>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

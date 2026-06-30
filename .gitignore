@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.env/
+anaconda/
+miniconda/
+
+# Conda
+.conda/
+
+# Dataset — too large for git
+data/train/
+data/val/
+data/test/
+data/train_frames/
+data/val_frames/
+
+# Model checkpoints — too large for git
+checkpoints/*.pt
+checkpoints/*.npy
+
+# Outputs
+outputs/*.mp4
+outputs/*.png
+outputs/*.csv
+
+# Uploads
+uploads/
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+
+# Keep folder structure but ignore contents
+!data/.gitkeep
+!checkpoints/.gitkeep
+!outputs/.gitkeep
+!uploads/.gitkeep
