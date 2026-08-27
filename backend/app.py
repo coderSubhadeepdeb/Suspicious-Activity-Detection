@@ -11,6 +11,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
+import mimetypes
+mimetypes.init()
+mimetypes.add_type("video/mp4", ".mp4")
+
 app = FastAPI(
     title="Video Anomaly Detection API",
     description="Upload surveillance video and get anomaly heatmap overlay",

@@ -38,14 +38,15 @@ def extract_frames_from_videos(video_dir, output_dir, image_size=64, target_fps=
 
 
 if __name__ == "__main__":
+    # image_size MUST match IMAGE_SIZE in training/config.py (currently 64)
     extract_frames_from_videos(
         os.path.join(BASE, "data", "train"),
         os.path.join(BASE, "data", "train_frames"),
-        image_size=48, target_fps=5
+        image_size=64, target_fps=5
     )
     extract_frames_from_videos(
         os.path.join(BASE, "data", "val"),
         os.path.join(BASE, "data", "val_frames"),
-        image_size=48, target_fps=5
+        image_size=64, target_fps=5
     )
     print("Frame extraction complete!")

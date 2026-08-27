@@ -3,6 +3,12 @@ import torch.nn as nn
 
 
 class ConvLSTMCell(nn.Module):
+    """
+    ConvLSTM cell with GroupNorm on the gate outputs for training stability.
+    GroupNorm works better than BatchNorm inside RNNs because it normalises
+    within a single sample (no dependence on batch size or sequence position).
+    """
+
     def __init__(self, input_channels, hidden_channels, kernel_size):
         super(ConvLSTMCell, self).__init__()
         self.hidden_channels = hidden_channels
@@ -15,16 +21,25 @@ class ConvLSTMCell(nn.Module):
             padding=padding
         )
 
+        # GroupNorm: normalise across channels within each sample.
+        # num_groups=8 works well when hidden_channels ≥ 32.
+        num_groups = min(8, hidden_channels)
+        self.norm_i = nn.GroupNorm(num_groups, hidden_channels)
+        self.norm_f = nn.GroupNorm(num_groups, hidden_channels)
+        self.norm_o = nn.GroupNorm(num_groups, hidden_channels)
+        self.norm_g = nn.GroupNorm(num_groups, hidden_channels)
+
     def forward(self, x, h, c):
         combined = torch.cat([x, h], dim=1)
-        gates = self.gates(combined)
+        gates    = self.gates(combined)
 
         in_gate, forget_gate, out_gate, cell_gate = gates.chunk(4, dim=1)
 
-        in_gate = torch.sigmoid(in_gate)
-        forget_gate = torch.sigmoid(forget_gate)
-        out_gate = torch.sigmoid(out_gate)
-        cell_gate = torch.tanh(cell_gate)
+        # Normalise before activation — improves gradient flow
+        in_gate    = torch.sigmoid(self.norm_i(in_gate))
+        forget_gate = torch.sigmoid(self.norm_f(forget_gate))
+        out_gate   = torch.sigmoid(self.norm_o(out_gate))
+        cell_gate  = torch.tanh(self.norm_g(cell_gate))
 
         c_next = forget_gate * c + in_gate * cell_gate
         h_next = out_gate * torch.tanh(c_next)
@@ -41,7 +56,7 @@ class ConvLSTMCell(nn.Module):
 class ConvLSTM(nn.Module):
     def __init__(self, input_channels, hidden_channels, kernel_size, num_layers):
         super(ConvLSTM, self).__init__()
-        self.num_layers = num_layers
+        self.num_layers     = num_layers
         self.hidden_channels = hidden_channels
 
         self.cells = nn.ModuleList()
@@ -54,8 +69,7 @@ class ConvLSTM(nn.Module):
         batch, seq_len, _, height, width = x.size()
         device = x.device
 
-        h = []
-        c = []
+        h, c = [], []
         for cell in self.cells:
             h_i, c_i = cell.init_hidden(batch, height, width, device)
             h.append(h_i)
